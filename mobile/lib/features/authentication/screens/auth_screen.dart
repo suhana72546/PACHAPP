@@ -1,4 +1,8 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+
 import '../../../core/theme/app_theme.dart';
 import '../../household/screens/household_home_screen.dart';
 
@@ -13,6 +17,51 @@ class _AuthScreenState extends State<AuthScreen> {
   bool isLogin = true;
   bool obscurePassword = true;
   bool obscureConfirmPassword = true;
+  bool isLoading = false;
+
+  // Login controllers
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController =
+  TextEditingController();
+
+  // Registration controllers
+  final TextEditingController nameController = TextEditingController();
+  final TextEditingController phoneController = TextEditingController();
+  final TextEditingController signupEmailController =
+  TextEditingController();
+  final TextEditingController houseNameController =
+  TextEditingController();
+  final TextEditingController houseNumberController =
+  TextEditingController();
+  final TextEditingController wardController =
+  TextEditingController();
+  final TextEditingController localBodyController =
+  TextEditingController();
+  final TextEditingController addressController =
+  TextEditingController();
+  final TextEditingController signupPasswordController =
+  TextEditingController();
+  final TextEditingController confirmPasswordController =
+  TextEditingController();
+
+  @override
+  void dispose() {
+    emailController.dispose();
+    passwordController.dispose();
+
+    nameController.dispose();
+    phoneController.dispose();
+    signupEmailController.dispose();
+    houseNameController.dispose();
+    houseNumberController.dispose();
+    wardController.dispose();
+    localBodyController.dispose();
+    addressController.dispose();
+    signupPasswordController.dispose();
+    confirmPasswordController.dispose();
+
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -24,9 +73,8 @@ class _AuthScreenState extends State<AuthScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-
               // =====================================================
-              // TOP LOGO
+              // LOGO
               // =====================================================
 
               Center(
@@ -45,9 +93,7 @@ class _AuthScreenState extends State<AuthScreen> {
                         color: AppTheme.primaryGreen,
                       ),
                     ),
-
                     const SizedBox(height: 14),
-
                     const Text(
                       'PACHAPP',
                       style: TextStyle(
@@ -57,9 +103,7 @@ class _AuthScreenState extends State<AuthScreen> {
                         letterSpacing: 1,
                       ),
                     ),
-
                     const SizedBox(height: 4),
-
                     const Text(
                       'Smart Waste Management',
                       style: TextStyle(
@@ -74,7 +118,7 @@ class _AuthScreenState extends State<AuthScreen> {
               const SizedBox(height: 32),
 
               // =====================================================
-              // LOGIN / SIGN UP SWITCH
+              // LOGIN / CREATE ACCOUNT
               // =====================================================
 
               Container(
@@ -97,7 +141,6 @@ class _AuthScreenState extends State<AuthScreen> {
                         },
                       ),
                     ),
-
                     Expanded(
                       child: _modeButton(
                         title: 'Create Account',
@@ -145,16 +188,11 @@ class _AuthScreenState extends State<AuthScreen> {
               const SizedBox(height: 25),
 
               // =====================================================
-              // LOGIN FORM
+              // FORM
               // =====================================================
 
               if (isLogin)
                 _buildLoginForm()
-
-              // =====================================================
-              // HOUSEHOLD SIGNUP FORM
-              // =====================================================
-
               else
                 _buildSignupForm(),
 
@@ -168,18 +206,26 @@ class _AuthScreenState extends State<AuthScreen> {
                 width: double.infinity,
                 height: 56,
                 child: ElevatedButton(
-                  onPressed: _handleMainButton,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
+                  onPressed: isLoading ? null : _handleMainButton,
+                  child: isLoading
+                      ? const SizedBox(
+                    width: 24,
+                    height: 24,
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2.5,
+                      color: Colors.white,
+                    ),
+                  )
+                      : Row(
+                    mainAxisAlignment:
+                    MainAxisAlignment.center,
                     children: [
                       Icon(
                         isLogin
                             ? Icons.login_rounded
                             : Icons.person_add_alt_1_rounded,
                       ),
-
                       const SizedBox(width: 10),
-
                       Text(
                         isLogin
                             ? 'Login'
@@ -193,7 +239,7 @@ class _AuthScreenState extends State<AuthScreen> {
               const SizedBox(height: 18),
 
               // =====================================================
-              // SWITCH MESSAGE
+              // SWITCH
               // =====================================================
 
               Center(
@@ -212,11 +258,11 @@ class _AuthScreenState extends State<AuthScreen> {
                 ),
               ),
 
+              const SizedBox(height: 18),
+
               // =====================================================
               // SECURITY MESSAGE
               // =====================================================
-
-              const SizedBox(height: 18),
 
               Container(
                 width: double.infinity,
@@ -235,9 +281,7 @@ class _AuthScreenState extends State<AuthScreen> {
                       color: AppTheme.primaryGreen,
                       size: 22,
                     ),
-
                     SizedBox(width: 10),
-
                     Expanded(
                       child: Text(
                         'Your account and personal information '
@@ -265,8 +309,8 @@ class _AuthScreenState extends State<AuthScreen> {
   Widget _buildLoginForm() {
     return Column(
       children: [
-
         _textField(
+          controller: emailController,
           label: 'Mobile Number / ID / Email',
           hint: 'Enter your registered details',
           icon: Icons.person_outline_rounded,
@@ -275,6 +319,7 @@ class _AuthScreenState extends State<AuthScreen> {
         const SizedBox(height: 16),
 
         _textField(
+          controller: passwordController,
           label: 'Password',
           hint: 'Enter your password',
           icon: Icons.lock_outline_rounded,
@@ -298,12 +343,8 @@ class _AuthScreenState extends State<AuthScreen> {
         Align(
           alignment: Alignment.centerRight,
           child: TextButton(
-            onPressed: () {
-              // Forgot password will be implemented later.
-            },
-            child: const Text(
-              'Forgot Password?',
-            ),
+            onPressed: () {},
+            child: const Text('Forgot Password?'),
           ),
         ),
       ],
@@ -311,14 +352,14 @@ class _AuthScreenState extends State<AuthScreen> {
   }
 
   // ==============================================================
-  // HOUSEHOLD SIGNUP FORM
+  // REGISTRATION FORM
   // ==============================================================
 
   Widget _buildSignupForm() {
     return Column(
       children: [
-
         _textField(
+          controller: nameController,
           label: 'Full Name',
           hint: 'Enter your full name',
           icon: Icons.person_outline_rounded,
@@ -327,6 +368,7 @@ class _AuthScreenState extends State<AuthScreen> {
         const SizedBox(height: 16),
 
         _textField(
+          controller: phoneController,
           label: 'Mobile Number',
           hint: 'Enter your mobile number',
           icon: Icons.phone_outlined,
@@ -336,8 +378,9 @@ class _AuthScreenState extends State<AuthScreen> {
         const SizedBox(height: 16),
 
         _textField(
+          controller: signupEmailController,
           label: 'Email',
-          hint: 'Optional',
+          hint: 'Enter your email',
           icon: Icons.email_outlined,
           keyboardType: TextInputType.emailAddress,
         ),
@@ -345,6 +388,7 @@ class _AuthScreenState extends State<AuthScreen> {
         const SizedBox(height: 16),
 
         _textField(
+          controller: houseNameController,
           label: 'House / Building Name',
           hint: 'Enter house or building name',
           icon: Icons.home_work_outlined,
@@ -353,6 +397,7 @@ class _AuthScreenState extends State<AuthScreen> {
         const SizedBox(height: 16),
 
         _textField(
+          controller: houseNumberController,
           label: 'House Number',
           hint: 'Enter house number',
           icon: Icons.tag_outlined,
@@ -361,6 +406,7 @@ class _AuthScreenState extends State<AuthScreen> {
         const SizedBox(height: 16),
 
         _textField(
+          controller: wardController,
           label: 'Ward / Area',
           hint: 'Enter ward or area',
           icon: Icons.location_on_outlined,
@@ -369,6 +415,7 @@ class _AuthScreenState extends State<AuthScreen> {
         const SizedBox(height: 16),
 
         _textField(
+          controller: localBodyController,
           label: 'Local Body / Panchayat',
           hint: 'Enter local body',
           icon: Icons.location_city_outlined,
@@ -377,6 +424,7 @@ class _AuthScreenState extends State<AuthScreen> {
         const SizedBox(height: 16),
 
         _textField(
+          controller: addressController,
           label: 'Address',
           hint: 'Enter complete address',
           icon: Icons.map_outlined,
@@ -386,6 +434,7 @@ class _AuthScreenState extends State<AuthScreen> {
         const SizedBox(height: 16),
 
         _textField(
+          controller: signupPasswordController,
           label: 'Password',
           hint: 'Create a password',
           icon: Icons.lock_outline_rounded,
@@ -407,6 +456,7 @@ class _AuthScreenState extends State<AuthScreen> {
         const SizedBox(height: 16),
 
         _textField(
+          controller: confirmPasswordController,
           label: 'Confirm Password',
           hint: 'Re-enter your password',
           icon: Icons.lock_outline_rounded,
@@ -434,6 +484,7 @@ class _AuthScreenState extends State<AuthScreen> {
   // ==============================================================
 
   Widget _textField({
+    TextEditingController? controller,
     required String label,
     required String hint,
     required IconData icon,
@@ -443,6 +494,7 @@ class _AuthScreenState extends State<AuthScreen> {
     int maxLines = 1,
   }) {
     return TextField(
+      controller: controller,
       keyboardType: keyboardType,
       obscureText: obscureText,
       maxLines: obscureText ? 1 : maxLines,
@@ -456,32 +508,246 @@ class _AuthScreenState extends State<AuthScreen> {
   }
 
   // ==============================================================
-  // LOGIN / SIGNUP BUTTON
+  // MAIN BUTTON
   // ==============================================================
 
-  void _handleMainButton() {
+  Future<void> _handleMainButton() async {
     if (isLogin) {
-      // TEMPORARY:
-      // Until backend authentication is connected,
-      // login opens the Household home screen for testing.
-
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => const HouseholdHomeScreen(),
-        ),
-      );
+      await _login();
     } else {
-      // Account creation will be connected to the backend later.
-
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text(
-            'Household account registration will be connected soon.',
-          ),
-        ),
-      );
+      await _register();
     }
+  }
+
+  // ==============================================================
+  // LOGIN
+  // ==============================================================
+
+  Future<void> _login() async {
+    final email = emailController.text.trim();
+    final password = passwordController.text;
+
+    if (email.isEmpty || password.isEmpty) {
+      _showMessage('Please enter email and password');
+      return;
+    }
+
+    setState(() {
+      isLoading = true;
+    });
+
+    try {
+      final response = await http.post(
+        Uri.parse(
+          'http://192.168.1.2:8080/api/auth/login',
+        ),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode({
+          'email': email,
+          'password': password,
+        }),
+      );
+
+      debugPrint('LOGIN STATUS: ${response.statusCode}');
+      debugPrint('LOGIN RESPONSE: ${response.body}');
+
+      if (!mounted) return;
+
+      if (response.statusCode >= 200 &&
+          response.statusCode < 300) {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) =>
+            const HouseholdHomeScreen(),
+          ),
+        );
+      } else {
+        _showMessage(
+          'Login failed: ${response.statusCode}',
+        );
+      }
+    } catch (e) {
+      if (!mounted) return;
+
+      debugPrint('LOGIN ERROR: $e');
+
+      _showMessage(
+        'Connection error: $e',
+      );
+    } finally {
+      if (mounted) {
+        setState(() {
+          isLoading = false;
+        });
+      }
+    }
+  }
+
+  // ==============================================================
+  // REGISTRATION
+  // ==============================================================
+
+  Future<void> _register() async {
+    final name = nameController.text.trim();
+    final phone = phoneController.text.trim();
+    final email = signupEmailController.text.trim();
+    final password = signupPasswordController.text;
+    final confirmPassword =
+        confirmPasswordController.text;
+
+    // ------------------------------------------------------------
+    // BASIC VALIDATION
+    // ------------------------------------------------------------
+
+    if (name.isEmpty) {
+      _showMessage('Please enter your full name');
+      return;
+    }
+
+    if (phone.isEmpty) {
+      _showMessage('Please enter your mobile number');
+      return;
+    }
+
+    if (email.isEmpty) {
+      _showMessage('Please enter your email');
+      return;
+    }
+
+    if (password.isEmpty) {
+      _showMessage('Please create a password');
+      return;
+    }
+
+    if (confirmPassword.isEmpty) {
+      _showMessage('Please confirm your password');
+      return;
+    }
+
+    if (password != confirmPassword) {
+      _showMessage('Passwords do not match');
+      return;
+    }
+
+    setState(() {
+      isLoading = true;
+    });
+
+    try {
+      // ----------------------------------------------------------
+      // SEND REGISTRATION REQUEST
+      // ----------------------------------------------------------
+
+      final response = await http.post(
+        Uri.parse(
+          'http://192.168.1.2:8080/api/auth/register',
+        ),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode({
+          'name': name,
+          'email': email,
+          'phone': phone,
+          'password': password,
+
+          // Household account
+          'role': 'HOUSEHOLD',
+        }),
+      );
+
+      debugPrint(
+        'REGISTER STATUS: ${response.statusCode}',
+      );
+
+      debugPrint(
+        'REGISTER RESPONSE: ${response.body}',
+      );
+
+      if (!mounted) return;
+
+      // ----------------------------------------------------------
+      // SUCCESS
+      // ----------------------------------------------------------
+
+      if (response.statusCode >= 200 &&
+          response.statusCode < 300) {
+        _showMessage(
+          'Account created successfully!',
+        );
+
+        // Switch back to login
+        setState(() {
+          isLogin = true;
+
+          emailController.text = email;
+          passwordController.clear();
+
+          isLoading = false;
+        });
+      }
+
+      // ----------------------------------------------------------
+      // EMAIL / PHONE ALREADY EXISTS
+      // ----------------------------------------------------------
+
+      else if (response.statusCode == 409) {
+        _showMessage(
+          'Email or mobile number already exists',
+        );
+      }
+
+      // ----------------------------------------------------------
+      // BAD REQUEST
+      // ----------------------------------------------------------
+
+      else if (response.statusCode == 400) {
+        _showMessage(
+          'Invalid registration details',
+        );
+      }
+
+      // ----------------------------------------------------------
+      // OTHER ERROR
+      // ----------------------------------------------------------
+
+      else {
+        _showMessage(
+          'Registration failed: ${response.statusCode}',
+        );
+      }
+    } catch (e) {
+      if (!mounted) return;
+
+      debugPrint('REGISTER ERROR: $e');
+
+      _showMessage(
+        'Connection error: $e',
+      );
+    } finally {
+      if (mounted) {
+        setState(() {
+          isLoading = false;
+        });
+      }
+    }
+  }
+
+  // ==============================================================
+  // MESSAGE
+  // ==============================================================
+
+  void _showMessage(String message) {
+    if (!mounted) return;
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+      ),
+    );
   }
 
   // ==============================================================

@@ -10,6 +10,8 @@ class AppTheme {
   static const Color forestGreen = Color(0xFF087F3F);
   static const Color primaryGreen = Color(0xFF0B8F47);
 
+  static const Color successGreen = Color(0xFF2E7D32);
+
   // Bright environmental greens
   static const Color leafGreen = Color(0xFF39B54A);
   static const Color brightGreen = Color(0xFF5BCB65);

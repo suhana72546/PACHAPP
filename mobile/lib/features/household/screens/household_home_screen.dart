@@ -1,11 +1,31 @@
 import 'package:flutter/material.dart';
 import '../../../core/theme/app_theme.dart';
+import 'profile.dart';
+import 'collection_history.dart';
+import 'rewards.dart';
+import 'notifications.dart';
 
-class HouseholdHomeScreen extends StatelessWidget {
+class HouseholdHomeScreen extends StatefulWidget {
   const HouseholdHomeScreen({super.key});
 
   @override
+  State<HouseholdHomeScreen> createState() => _HouseholdHomeScreenState();
+}
+
+class _HouseholdHomeScreenState extends State<HouseholdHomeScreen> {
+  int _selectedIndex = 0;
+
+  @override
   Widget build(BuildContext context) {
+    // Backend data will be connected here later.
+    const String collectionStatus = '--';
+    const String collectionType = '--';
+    const String collectionTime = '--';
+    const String collectionLocation = '--';
+    const String rewardPoints = '--';
+    const String totalCollections = '--';
+    const String totalWaste = '--';
+
     return Scaffold(
       backgroundColor: AppTheme.background,
 
@@ -42,10 +62,17 @@ class HouseholdHomeScreen extends StatelessWidget {
 
         actions: [
           IconButton(
-            onPressed: () {},
             icon: const Icon(
               Icons.notifications_none_rounded,
             ),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => const NotificationsScreen(),
+                ),
+              );
+            },
           ),
 
           Padding(
@@ -168,9 +195,9 @@ class HouseholdHomeScreen extends StatelessWidget {
                           color: Colors.white,
                           borderRadius: BorderRadius.circular(20),
                         ),
-                        child: const Text(
-                          'Tomorrow',
-                          style: TextStyle(
+                        child: Text(
+                          collectionStatus,
+                          style: const TextStyle(
                             color: AppTheme.primaryGreen,
                             fontSize: 12,
                             fontWeight: FontWeight.w700,
@@ -182,9 +209,9 @@ class HouseholdHomeScreen extends StatelessWidget {
 
                   const SizedBox(height: 20),
 
-                  const Text(
-                    'Plastic & Dry Waste',
-                    style: TextStyle(
+                  Text(
+                    collectionType,
+                    style: const TextStyle(
                       color: Colors.white,
                       fontSize: 22,
                       fontWeight: FontWeight.w800,
@@ -193,17 +220,17 @@ class HouseholdHomeScreen extends StatelessWidget {
 
                   const SizedBox(height: 7),
 
-                  const Row(
+                  Row(
                     children: [
-                      Icon(
+                      const Icon(
                         Icons.access_time_rounded,
                         color: Colors.white70,
                         size: 18,
                       ),
-                      SizedBox(width: 6),
+                      const SizedBox(width: 6),
                       Text(
-                        '10:00 AM – 12:00 PM',
-                        style: TextStyle(
+                        collectionTime,
+                        style: const TextStyle(
                           color: Colors.white70,
                           fontSize: 14,
                         ),
@@ -213,19 +240,21 @@ class HouseholdHomeScreen extends StatelessWidget {
 
                   const SizedBox(height: 5),
 
-                  const Row(
+                  Row(
                     children: [
-                      Icon(
+                      const Icon(
                         Icons.location_on_outlined,
                         color: Colors.white70,
                         size: 18,
                       ),
-                      SizedBox(width: 6),
-                      Text(
-                        'Ward 12 • Chengannur',
-                        style: TextStyle(
-                          color: Colors.white70,
-                          fontSize: 14,
+                      const SizedBox(width: 6),
+                      Expanded(
+                        child: Text(
+                          collectionLocation,
+                          style: const TextStyle(
+                            color: Colors.white70,
+                            fontSize: 14,
+                          ),
                         ),
                       ),
                     ],
@@ -237,7 +266,9 @@ class HouseholdHomeScreen extends StatelessWidget {
                     width: double.infinity,
                     height: 45,
                     child: ElevatedButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        // Collection details will be connected later.
+                      },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.white,
                         foregroundColor: AppTheme.primaryGreen,
@@ -277,12 +308,13 @@ class HouseholdHomeScreen extends StatelessWidget {
 
             Row(
               children: [
-
                 Expanded(
                   child: _actionCard(
                     icon: Icons.local_shipping_outlined,
                     title: 'Request\nCollection',
-                    onTap: () {},
+                    onTap: () {
+                      // Request collection will be connected later.
+                    },
                   ),
                 ),
 
@@ -292,7 +324,9 @@ class HouseholdHomeScreen extends StatelessWidget {
                   child: _actionCard(
                     icon: Icons.camera_alt_outlined,
                     title: 'Verify\nWaste',
-                    onTap: () {},
+                    onTap: () {
+                      // Waste verification will be connected later.
+                    },
                   ),
                 ),
 
@@ -302,7 +336,14 @@ class HouseholdHomeScreen extends StatelessWidget {
                   child: _actionCard(
                     icon: Icons.stars_outlined,
                     title: 'Rewards',
-                    onTap: () {},
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => const RewardsScreen(),
+                        ),
+                      );
+                    },
                   ),
                 ),
               ],
@@ -337,7 +378,6 @@ class HouseholdHomeScreen extends StatelessWidget {
               ),
               child: Row(
                 children: [
-
                   Container(
                     width: 56,
                     height: 56,
@@ -354,11 +394,11 @@ class HouseholdHomeScreen extends StatelessWidget {
 
                   const SizedBox(width: 15),
 
-                  const Expanded(
+                  Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
+                        const Text(
                           'Available Points',
                           style: TextStyle(
                             fontSize: 13,
@@ -366,11 +406,11 @@ class HouseholdHomeScreen extends StatelessWidget {
                           ),
                         ),
 
-                        SizedBox(height: 3),
+                        const SizedBox(height: 3),
 
                         Text(
-                          '250 Points',
-                          style: TextStyle(
+                          rewardPoints,
+                          style: const TextStyle(
                             fontSize: 23,
                             fontWeight: FontWeight.w800,
                             color: AppTheme.textDark,
@@ -381,7 +421,14 @@ class HouseholdHomeScreen extends StatelessWidget {
                   ),
 
                   TextButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => const RewardsScreen(),
+                        ),
+                      );
+                    },
                     child: const Text(
                       'View',
                     ),
@@ -409,11 +456,10 @@ class HouseholdHomeScreen extends StatelessWidget {
 
             Row(
               children: [
-
                 Expanded(
                   child: _summaryCard(
                     icon: Icons.recycling_rounded,
-                    value: '12',
+                    value: totalCollections,
                     label: 'Collections',
                   ),
                 ),
@@ -423,7 +469,7 @@ class HouseholdHomeScreen extends StatelessWidget {
                 Expanded(
                   child: _summaryCard(
                     icon: Icons.scale_outlined,
-                    value: '8.5 kg',
+                    value: totalWaste,
                     label: 'Waste Collected',
                   ),
                 ),
@@ -446,7 +492,6 @@ class HouseholdHomeScreen extends StatelessWidget {
               child: const Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-
                   Icon(
                     Icons.lightbulb_outline_rounded,
                     color: AppTheme.primaryGreen,
@@ -457,8 +502,7 @@ class HouseholdHomeScreen extends StatelessWidget {
 
                   Expanded(
                     child: Column(
-                      crossAxisAlignment:
-                      CrossAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
                           'Eco Tip',
@@ -495,26 +539,51 @@ class HouseholdHomeScreen extends StatelessWidget {
       // --------------------------------------------------
 
       bottomNavigationBar: NavigationBar(
-        selectedIndex: 0,
+        selectedIndex: _selectedIndex,
+        onDestinationSelected: (index) {
+          if (index == 1) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (_) => const CollectionHistoryScreen(),
+              ),
+            );
+          } else if (index == 2) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (_) => const RewardsScreen(),
+              ),
+            );
+          } else if (index == 3) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (_) => const ProfileScreen(),
+              ),
+            );
+          } else {
+            setState(() {
+              _selectedIndex = index;
+            });
+          }
+        },
         destinations: const [
           NavigationDestination(
             icon: Icon(Icons.home_outlined),
             selectedIcon: Icon(Icons.home_rounded),
             label: 'Home',
           ),
-
           NavigationDestination(
-            icon: Icon(Icons.recycling_outlined),
-            selectedIcon: Icon(Icons.recycling_rounded),
+            icon: Icon(Icons.delete_outline_rounded),
+            selectedIcon: Icon(Icons.delete_rounded),
             label: 'Collection',
           ),
-
           NavigationDestination(
-            icon: Icon(Icons.stars_outlined),
-            selectedIcon: Icon(Icons.stars_rounded),
+            icon: Icon(Icons.card_giftcard_outlined),
+            selectedIcon: Icon(Icons.card_giftcard_rounded),
             label: 'Rewards',
           ),
-
           NavigationDestination(
             icon: Icon(Icons.person_outline_rounded),
             selectedIcon: Icon(Icons.person_rounded),
@@ -593,7 +662,6 @@ class HouseholdHomeScreen extends StatelessWidget {
       ),
       child: Row(
         children: [
-
           Container(
             width: 44,
             height: 44,

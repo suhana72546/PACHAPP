@@ -6,6 +6,12 @@ class CollectionScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Backend collection data will be connected here later.
+    const String assignedArea = '--';
+    const String remainingHouseholds = '--';
+
+    const households = <Map<String, dynamic>>[];
+
     return Scaffold(
       backgroundColor: AppTheme.background,
 
@@ -53,22 +59,24 @@ class CollectionScreen extends StatelessWidget {
 
                   const SizedBox(width: 15),
 
-                  const Expanded(
+                  Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Ward 12 • Chengannur',
-                          style: TextStyle(
+                          assignedArea,
+                          style: const TextStyle(
                             fontSize: 17,
                             fontWeight: FontWeight.w800,
                             color: AppTheme.darkGreen,
                           ),
                         ),
-                        SizedBox(height: 5),
+
+                        const SizedBox(height: 5),
+
                         Text(
-                          '11 households remaining',
-                          style: TextStyle(
+                          '$remainingHouseholds households remaining',
+                          style: const TextStyle(
                             fontSize: 13,
                             color: AppTheme.textMedium,
                           ),
@@ -94,60 +102,26 @@ class CollectionScreen extends StatelessWidget {
             const SizedBox(height: 12),
 
             // ------------------------------------------------
-            // HOUSE 1
+            // BACKEND EMPTY STATE
             // ------------------------------------------------
 
-            _householdCard(
-              context: context,
-              houseNumber: 'House #12',
-              name: 'Anitha',
-              waste: 'Plastic + Paper',
-              status: 'Pending',
-            ),
+            if (households.isEmpty)
+              _buildEmptyState()
+            else
+              ...households.map(
+                    (household) => Padding(
+                  padding: const EdgeInsets.only(bottom: 12),
+                  child: _householdCard(
+                    context: context,
+                    houseNumber: household['houseNumber'] ?? '',
+                    name: household['name'] ?? '',
+                    waste: household['waste'] ?? '',
+                    status: household['status'] ?? '',
+                  ),
+                ),
+              ),
 
-            const SizedBox(height: 12),
-
-            // ------------------------------------------------
-            // HOUSE 2
-            // ------------------------------------------------
-
-            _householdCard(
-              context: context,
-              houseNumber: 'House #13',
-              name: 'Rajesh',
-              waste: 'Plastic',
-              status: 'Pending',
-            ),
-
-            const SizedBox(height: 12),
-
-            // ------------------------------------------------
-            // HOUSE 3
-            // ------------------------------------------------
-
-            _householdCard(
-              context: context,
-              houseNumber: 'House #14',
-              name: 'Meera',
-              waste: 'Plastic + Glass',
-              status: 'Collected',
-            ),
-
-            const SizedBox(height: 12),
-
-            // ------------------------------------------------
-            // HOUSE 4
-            // ------------------------------------------------
-
-            _householdCard(
-              context: context,
-              houseNumber: 'House #15',
-              name: 'Suresh',
-              waste: 'Paper + Plastic',
-              status: 'Pending',
-            ),
-
-            const SizedBox(height: 25),
+            const SizedBox(height: 13),
 
             // ------------------------------------------------
             // INFORMATION
@@ -196,6 +170,60 @@ class CollectionScreen extends StatelessWidget {
   }
 
   // ============================================================
+  // EMPTY STATE
+  // ============================================================
+
+  Widget _buildEmptyState() {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.symmetric(
+        horizontal: 20,
+        vertical: 30,
+      ),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(
+          color: AppTheme.border,
+        ),
+      ),
+      child: const Column(
+        children: [
+
+          Icon(
+            Icons.home_work_outlined,
+            size: 50,
+            color: AppTheme.textMedium,
+          ),
+
+          SizedBox(height: 12),
+
+          Text(
+            'No assigned households',
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontSize: 17,
+              fontWeight: FontWeight.w700,
+              color: AppTheme.darkGreen,
+            ),
+          ),
+
+          SizedBox(height: 6),
+
+          Text(
+            'Assigned households will appear here.',
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontSize: 13,
+              color: AppTheme.textMedium,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // ============================================================
   // HOUSEHOLD CARD
   // ============================================================
 
@@ -206,7 +234,7 @@ class CollectionScreen extends StatelessWidget {
     required String waste,
     required String status,
   }) {
-    final bool collected = status == 'Collected';
+    final bool collected = status.toLowerCase() == 'collected';
 
     return Container(
       padding: const EdgeInsets.all(17),
@@ -237,7 +265,7 @@ class CollectionScreen extends StatelessWidget {
                       ? Icons.check_circle_outline_rounded
                       : Icons.home_outlined,
                   color: collected
-                      ? AppTheme.successGreen
+                      ? AppTheme.primaryGreen
                       : AppTheme.rewardOrange,
                   size: 26,
                 ),
@@ -289,7 +317,7 @@ class CollectionScreen extends StatelessWidget {
                     fontSize: 11,
                     fontWeight: FontWeight.w700,
                     color: collected
-                        ? AppTheme.successGreen
+                        ? AppTheme.primaryGreen
                         : AppTheme.rewardOrange,
                   ),
                 ),
@@ -403,6 +431,7 @@ class CollectionScreen extends StatelessWidget {
                       crossAxisAlignment:
                       CrossAxisAlignment.start,
                       children: [
+
                         Text(
                           houseNumber,
                           style: const TextStyle(
@@ -411,6 +440,7 @@ class CollectionScreen extends StatelessWidget {
                             color: AppTheme.darkGreen,
                           ),
                         ),
+
                         Text(
                           name,
                           style: const TextStyle(
@@ -448,7 +478,7 @@ class CollectionScreen extends StatelessWidget {
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
                       content: Text(
-                        'Waste verification will be added next.',
+                        'Waste verification will be connected later.',
                       ),
                     ),
                   );
@@ -468,7 +498,7 @@ class CollectionScreen extends StatelessWidget {
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
                       content: Text(
-                        'Waste quantity screen will be added next.',
+                        'Waste quantity will be connected later.',
                       ),
                     ),
                   );
@@ -488,7 +518,7 @@ class CollectionScreen extends StatelessWidget {
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
                       content: Text(
-                        'Collection marked as complete.',
+                        'Collection completion will be connected later.',
                       ),
                     ),
                   );
@@ -546,6 +576,7 @@ class CollectionScreen extends StatelessWidget {
                 crossAxisAlignment:
                 CrossAxisAlignment.start,
                 children: [
+
                   Text(
                     title,
                     style: const TextStyle(
@@ -554,7 +585,9 @@ class CollectionScreen extends StatelessWidget {
                       color: AppTheme.textDark,
                     ),
                   ),
+
                   const SizedBox(height: 3),
+
                   Text(
                     subtitle,
                     style: const TextStyle(

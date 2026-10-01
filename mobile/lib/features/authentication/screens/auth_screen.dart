@@ -465,11 +465,12 @@ class _AuthScreenState extends State<AuthScreen> {
       // Until backend authentication is connected,
       // login opens the Household home screen for testing.
 
-      Navigator.push(
+      Navigator.pushAndRemoveUntil(
         context,
         MaterialPageRoute(
-          builder: (context) => const HouseholdHomeScreen(),
+          builder: (_) => const HouseholdHomeScreen(),
         ),
+            (route) => false,
       );
     } else {
       // Account creation will be connected to the backend later.

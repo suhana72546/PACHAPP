@@ -41,7 +41,9 @@ class WorkerHomeScreen extends StatelessWidget {
 
         actions: [
           IconButton(
-            onPressed: () {},
+            onPressed: () {
+              // Notifications will be connected to the backend later.
+            },
             icon: const Icon(
               Icons.notifications_none_rounded,
             ),
@@ -112,7 +114,6 @@ class WorkerHomeScreen extends StatelessWidget {
               ),
               child: Row(
                 children: [
-
                   Container(
                     width: 54,
                     height: 54,
@@ -144,7 +145,7 @@ class WorkerHomeScreen extends StatelessWidget {
                         SizedBox(height: 4),
 
                         Text(
-                          'Ward 12 • Chengannur',
+                          'Area not available',
                           style: TextStyle(
                             fontSize: 17,
                             fontWeight: FontWeight.w800,
@@ -182,11 +183,10 @@ class WorkerHomeScreen extends StatelessWidget {
 
             Row(
               children: [
-
                 Expanded(
                   child: _statCard(
                     icon: Icons.home_work_outlined,
-                    value: '18',
+                    value: '--',
                     label: 'Households',
                   ),
                 ),
@@ -196,7 +196,7 @@ class WorkerHomeScreen extends StatelessWidget {
                 Expanded(
                   child: _statCard(
                     icon: Icons.check_circle_outline_rounded,
-                    value: '7',
+                    value: '--',
                     label: 'Completed',
                   ),
                 ),
@@ -206,7 +206,7 @@ class WorkerHomeScreen extends StatelessWidget {
                 Expanded(
                   child: _statCard(
                     icon: Icons.pending_actions_rounded,
-                    value: '11',
+                    value: '--',
                     label: 'Remaining',
                   ),
                 ),
@@ -242,8 +242,6 @@ class WorkerHomeScreen extends StatelessWidget {
                     ),
                   );
                 },
-
-
                 icon: const Icon(
                   Icons.recycling_rounded,
                   size: 28,
@@ -276,7 +274,6 @@ class WorkerHomeScreen extends StatelessWidget {
               ),
               child: Row(
                 children: [
-
                   Container(
                     width: 55,
                     height: 55,
@@ -349,11 +346,10 @@ class WorkerHomeScreen extends StatelessWidget {
 
             Row(
               children: [
-
                 Expanded(
                   child: _performanceCard(
                     icon: Icons.recycling_rounded,
-                    value: '126',
+                    value: '--',
                     label: 'Collections',
                   ),
                 ),
@@ -363,7 +359,7 @@ class WorkerHomeScreen extends StatelessWidget {
                 Expanded(
                   child: _performanceCard(
                     icon: Icons.scale_outlined,
-                    value: '84 kg',
+                    value: '--',
                     label: 'Waste Collected',
                   ),
                 ),
@@ -385,7 +381,6 @@ class WorkerHomeScreen extends StatelessWidget {
               ),
               child: Row(
                 children: [
-
                   Container(
                     width: 55,
                     height: 55,
@@ -417,7 +412,7 @@ class WorkerHomeScreen extends StatelessWidget {
                         SizedBox(height: 3),
 
                         Text(
-                          '1,250 Points',
+                          '-- Points',
                           style: TextStyle(
                             fontSize: 22,
                             fontWeight: FontWeight.w800,
@@ -428,7 +423,7 @@ class WorkerHomeScreen extends StatelessWidget {
                         SizedBox(height: 3),
 
                         Text(
-                          'Keep up the great work!',
+                          'Your reward information will appear here.',
                           style: TextStyle(
                             fontSize: 12,
                             color: AppTheme.textMedium,
